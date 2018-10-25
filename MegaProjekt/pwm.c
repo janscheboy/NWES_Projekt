@@ -1,5 +1,4 @@
-/** \file main.c
- *
+/*
  * \brief PWM: dim an LED.
  *
  * This example program dims LED 0 with the aid of pulse-width modulation.
@@ -17,16 +16,6 @@
  * - d: duty cycle
  * 
  * Please see modules 4.2.4 and 4.3.4 for more information.
- *
- * \author    Wolfgang Neff
- * \version   1.3
- * \date      2018-06-27
- *
- * \par History
- *      Created: 2013-07-22 \n
- *      Modified: 2016-10-15 \n
- *      Modified: 2017-11-26 \n
- *      Modified: 2018-06-27
  */
 
 #include <avr/io.h>
@@ -39,7 +28,7 @@
 // two options to handle this issue:
 // - We can invert the duty cycle: 0% => LED on, 25% => LED dimmed to 75% etc.
 // - We can invert the pin: the active low LED becomes active high.
-int init_pwm(void)
+int muell(void)
 {
 	// Initialize the LED and invert the pin.
     LED_PORT.DIR |= LED0_PIN_bm;
@@ -76,4 +65,8 @@ int init_pwm(void)
 			TCE0.CCA = 0x0000;       // Duty cycle 0%: LED switched off
 		}
 	}
+}
+
+void init_pwm(void) {
+
 }

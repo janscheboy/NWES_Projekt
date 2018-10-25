@@ -1,14 +1,5 @@
-/** \file pwm.h
- *
+/*
  * \brief This module implements a PWM driver.
- *
- * \author    Wolfgang Neff
- * \version   2.0
- * \date      2018-03-10
- *
- * \par History
- *      Created: 2017-07-06
- *      Modified: 2018-03-10
  */
 
 #ifndef PWM_H_

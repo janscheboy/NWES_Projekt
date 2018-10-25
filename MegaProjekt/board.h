@@ -1,5 +1,4 @@
-/** \file board.h
- *
+/*
  * \brief Header file for the XMEGA-A1 Xplained evaluation board.
  *
  * This header provides constants for the following components on the board:
@@ -13,20 +12,6 @@
  * * \ref temperature
  * * \ref speaker
  * * \ref oscillators
- *
- * \author    Wolfgang Neff
- * \version   1.7
- * \date      2018-07-22
- *
- * \par History
- *      Created: 2013-07-16 \n
- *      Modified: 2013-07-24 \n
- *      Modified: 2015-01-27 \n
- *      Modified: 2016-06-11 \n
- *      Modified: 2016-11-26 \n
- *      Modified: 2017-06-04 \n
- *      Modified: 2017-08-04 \n
- *      Modified: 2018-07-22
  *
  * \note
  *      **USB:** Parameter for the USART-to-USB gateway: 115200 8N1. \n

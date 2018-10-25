@@ -26,11 +26,6 @@
 #define SPI_MISO_bp  PIN6_bp
 #define SPI_SCK_bp   PIN7_bp
 
-#define SPI_SS_bm    PIN4_bm
-#define SPI_MOSI_bm  PIN5_bm
-#define SPI_MISO_bm  PIN6_bm
-#define SPI_SCK_bm   PIN7_bm
-
 #define SPI_CLOCK_SPEED_gc SPI_PRESCALER_DIV4_gc
 
 #ifdef __cplusplus

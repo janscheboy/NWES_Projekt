@@ -1,4 +1,4 @@
-/** \file main.c
+/*
  *
  * \brief SPI: data transfer.
  *
@@ -14,15 +14,6 @@
  *   - IF: Interrupt Flag
  *
  * Please see module 5.3.3 for more information.
- *
- * \author    Wolfgang Neff
- * \version   1.2
- * \date      2018-06-27
- *
- * \par History
- *      Created: 2015-02-06 \n
- *      Modified: 2016-10-15 \n
- *      Modified: 2018-06-27
  */
 
 #include <avr/io.h>
@@ -39,13 +30,11 @@
 #define SPI_MISO_bm PIN6_bm  // Master In, Slave Out
 #define SPI_SCK_bm  PIN7_bm  // Serial Clock
 
-#define SPI_DATA 'A'
-
 // We want to transmit data via the SPI interface on port C. The microcontroller
 // is the master of the transmission. MISO is input. MOSI, SS and SCK are output.
 // We use a prescaler of 64. Therefore the transmission speed is 31.25 kbps. The
 // slave select line is active low. At the beginning the slave is deselected.
-int init_main(void)
+int init_spi(void)
 {
 	/***** Initialize the SPI. *****/
 	// Deactivate the slave.
@@ -59,15 +48,26 @@ int init_main(void)
 
     while(1)
     {
-		// Select the slave.
-		SPI_PORT.OUT &= ~SPI_SS_bm;
-		// Send the data.
-		SPI_MODULE.DATA = SPI_DATA;
 		// While transmission has not yet finished do nothing.
 		while (!(SPI_MODULE.STATUS & SPI_IF_bm));
-		// Deselect the slave.
-		SPI_PORT.OUT |= SPI_SS_bm;
 		// Wait a bit before starting the next transmission.
 		_delay_ms(1000);
     }
+}
+
+void spi_select_slave(void) {
+	// Select the slave.
+	SPI_PORT.OUT &= ~SPI_SS_bm;
+}
+
+void spi_deselect_slave(void) {
+	// Deselect the slave.
+	SPI_PORT.OUT |= SPI_SS_bm;
+}
+
+void spi_transfer(uint8_t byte) {
+	// Send the data.
+	SPI_MODULE.DATA = byte;
+	// While transmission has not yet finished do nothing.
+	while (!(SPI_MODULE.STATUS & SPI_IF_bm));
 }
