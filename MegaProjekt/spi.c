@@ -19,7 +19,7 @@
 #include <avr/io.h>
 #include <util/delay.h>
 
-#include "board.h"
+//#include "board.h"
 
 // We define some constants to have better mnemonics (names).
 #define SPI_MODULE  SPIC
@@ -34,9 +34,8 @@
 // is the master of the transmission. MISO is input. MOSI, SS and SCK are output.
 // We use a prescaler of 64. Therefore the transmission speed is 31.25 kbps. The
 // slave select line is active low. At the beginning the slave is deselected.
-int init_spi(void)
+void spi_init(void)
 {
-	/***** Initialize the SPI. *****/
 	// Deactivate the slave.
 	SPI_PORT.OUT |= SPI_SS_bm;
 	// Make MISO an input line.
@@ -45,29 +44,20 @@ int init_spi(void)
 	SPI_PORT.DIR |= SPI_SS_bm | SPI_MOSI_bm | SPI_SCK_bm;
 	// Enable SPI, select master mode and set the prescaler factor to 64.
 	SPI_MODULE.CTRL = SPI_ENABLE_bm | SPI_MASTER_bm | SPI_PRESCALER_DIV64_gc;
-
-    while(1)
-    {
-		// While transmission has not yet finished do nothing.
-		while (!(SPI_MODULE.STATUS & SPI_IF_bm));
-		// Wait a bit before starting the next transmission.
-		_delay_ms(1000);
-    }
 }
 
 void spi_select_slave(void) {
-	// Select the slave.
 	SPI_PORT.OUT &= ~SPI_SS_bm;
 }
 
 void spi_deselect_slave(void) {
-	// Deselect the slave.
 	SPI_PORT.OUT |= SPI_SS_bm;
 }
 
-void spi_transfer(uint8_t byte) {
+uint8_t spi_transfer(uint8_t byte) {
 	// Send the data.
 	SPI_MODULE.DATA = byte;
 	// While transmission has not yet finished do nothing.
 	while (!(SPI_MODULE.STATUS & SPI_IF_bm));
+	return byte;
 }

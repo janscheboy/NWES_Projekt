@@ -1,16 +1,8 @@
-/** \file spi.h
- *
+/*
  * \brief  Header file for the SPI interface.
  *
  * This library provides high level access to the Serial Peripheral Interface
  * bus interface.
- *
- * \author    Wolfgang Neff
- * \version   1.0
- * \date      2016-05-14
- *
- * \par History
- *      Created: 2016-05-14 
  */
 
 #ifndef SPI_H_

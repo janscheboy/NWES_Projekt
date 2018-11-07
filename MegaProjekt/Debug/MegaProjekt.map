@@ -31,22 +31,21 @@ Discarded input sections
  .text          0x00000000        0x0 spi.o
  .data          0x00000000        0x0 spi.o
  .bss           0x00000000        0x0 spi.o
- .text.init_spi
-                0x00000000       0x3a spi.o
+ .text.spi_init
+                0x00000000       0x1e spi.o
  .text.spi_select_slave
                 0x00000000        0xc spi.o
  .text.spi_deselect_slave
                 0x00000000        0xc spi.o
  .text.spi_transfer
                 0x00000000       0x10 spi.o
- .debug_info    0x00000000      0x379 spi.o
- .debug_abbrev  0x00000000      0x161 spi.o
- .debug_loc     0x00000000       0x20 spi.o
+ .debug_info    0x00000000      0x2ef spi.o
+ .debug_abbrev  0x00000000       0xd5 spi.o
  .debug_aranges
                 0x00000000       0x38 spi.o
  .debug_ranges  0x00000000       0x28 spi.o
- .debug_line    0x00000000      0x1ee spi.o
- .debug_str     0x00000000      0x358 spi.o
+ .debug_line    0x00000000      0x16c spi.o
+ .debug_str     0x00000000      0x30d spi.o
  .comment       0x00000000       0x31 spi.o
  .debug_frame   0x00000000       0x54 spi.o
  .text          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega7\libgcc.a(_exit.o)
@@ -519,11 +518,11 @@ END GROUP
  .debug_abbrev  0x0000327a       0x44 c1201.o
  .debug_abbrev  0x000032be       0x68 main.o
 
-.debug_line     0x00000000      0x42d
+.debug_line     0x00000000      0x42b
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x00000000      0x3a9 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/XMEGAA_DFP/1.1.68/gcc/dev/atxmega128a1/avrxmega7/crtatxmega128a1.o
- .debug_line    0x000003a9       0x3a c1201.o
- .debug_line    0x000003e3       0x4a main.o
+ .debug_line    0x000003a9       0x38 c1201.o
+ .debug_line    0x000003e1       0x4a main.o
 
 .debug_frame    0x00000000       0x48
  *(.debug_frame)

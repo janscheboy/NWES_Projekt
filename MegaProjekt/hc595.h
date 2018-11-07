@@ -1,16 +1,8 @@
-/** \file hc595.h
- *
+/*
  * \brief Header file for the 74HC595 serial-in, parallel-out shift register.
  *
  * This file defines the pin mapping for the 74HC595 8-bit serial-in,
  * serial or parallel-out shift register with output latches.
- *
- * \author    Wolfgang Neff
- * \version   1.0
- * \date      2018-03-09
- *
- * \par History
- *      Created: 2018-03-09
  */
 
 #ifndef HC595_H_

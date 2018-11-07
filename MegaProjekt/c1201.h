@@ -1,17 +1,9 @@
-/** \file c1201.h
- *
+/*
  * \brief This module implements an interface to the MIKROE-1201 7seg click.
  *
  * The MIKROE-1201 7seg click provides two seven-segment displays using a
  * 74HC595 serial-in, parallel-out shift register. This module provides an
  * interface to this module.
- *
- * \author    Wolfgang Neff
- * \version   1.0
- * \date      2018-03-09
- *
- * \par History
- *      Created: 2018-03-09
  */
 
 #ifndef C1201_H_

@@ -17,13 +17,13 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
   6 .debug_abbrev 00003326  00000000  00000000  00003992  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   0000042d  00000000  00000000  00006cb8  2**0
+  7 .debug_line   0000042b  00000000  00000000  00006cb8  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  00000048  00000000  00000000  000070e8  2**2
+  8 .debug_frame  00000048  00000000  00000000  000070e4  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    000024fa  00000000  00000000  00007130  2**0
+  9 .debug_str    000024fa  00000000  00000000  0000712c  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_ranges 00000020  00000000  00000000  0000962a  2**0
+ 10 .debug_ranges 00000020  00000000  00000000  00009626  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -175,9 +175,9 @@ Disassembly of section .text:
  214:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
 
 00000218 <c1201_init>:
- */ 
 #include <avr/io.h>
 #include "c1201.h"
+#include "hc595.h"
 #include "board.h"
 
 void c1201_init() {

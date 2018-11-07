@@ -28,11 +28,11 @@
 // two options to handle this issue:
 // - We can invert the duty cycle: 0% => LED on, 25% => LED dimmed to 75% etc.
 // - We can invert the pin: the active low LED becomes active high.
-int muell(void)
+void pwm_init(void)
 {
 	// Initialize the LED and invert the pin.
-    LED_PORT.DIR |= LED0_PIN_bm;
-	LED_PORT.PIN0CTRL = PORT_INVEN_bm;
+    //LED_PORT.DIR |= LED0_PIN_bm;
+	//LED_PORT.PIN0CTRL = PORT_INVEN_bm;
 
 	// Initialize the push-buttons.
 	BUTTON_LOW_PORT.PIN0CTRL = PORT_OPC_PULLUP_gc;
@@ -40,18 +40,14 @@ int muell(void)
 	BUTTON_LOW_PORT.PIN2CTRL = PORT_OPC_PULLUP_gc;
 	BUTTON_LOW_PORT.PIN3CTRL = PORT_OPC_PULLUP_gc;
 
-	/***** Initialize the PWM *****/
 	// Enable compare register A and select single slope PWM mode.
     TCE0.CTRLB = TC0_CCAEN_bm | TC_WGMODE_SS_gc;
 	// Set clock period. We use 10000 for simplicity.
 	TCE0.PER = 10000;
 	// Initial duty cycle: 100%.
-	TCE0.CCA =  TCE0.PER;            
-	// Turn on the clock.
-	TCE0.CTRLA = TC_CLKSEL_DIV1_gc;
+	TCE0.CCA = TCE0.PER;            
+	
 
-	while(1)
-	{
 		if (!(BUTTON_LOW_PORT.IN & BUTTON0_PIN_bm)) {
 			TCE0.CCA = TCE0.PER;     // Duty cycle 100%: LED not dimmed
 		}
@@ -64,9 +60,17 @@ int muell(void)
 		if (!(BUTTON_LOW_PORT.IN & BUTTON3_PIN_bm)) {
 			TCE0.CCA = 0x0000;       // Duty cycle 0%: LED switched off
 		}
-	}
 }
 
-void init_pwm(void) {
+void pwm_start(void) {
+	// Turn on the clock.
+	TCE0.CTRLA = TC_CLKSEL_DIV1_gc;
+}
 
+void pwm_stop(void) {
+	
+}
+
+void pwm_duty(uint8_t duty) {
+	TCE0.CCA = TCE0.PER/duty;
 }
