@@ -3,27 +3,29 @@ MegaProjekt.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         00000224  00000000  00000000  00000054  2**1
+  0 .text         000002f4  00000000  00000000  00000054  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .data         00000000  00802000  00802000  00000278  2**0
+  1 .data         00000000  00802000  00802000  00000348  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  2 .comment      00000030  00000000  00000000  00000278  2**0
+  2 .comment      00000030  00000000  00000000  00000348  2**0
                   CONTENTS, READONLY
-  3 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  000002a8  2**2
+  3 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  00000378  2**2
                   CONTENTS, READONLY
-  4 .debug_aranges 00000040  00000000  00000000  000002e8  2**0
+  4 .debug_aranges 00000080  00000000  00000000  000003b8  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   0000366a  00000000  00000000  00000328  2**0
+  5 .debug_info   00004275  00000000  00000000  00000438  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 00003326  00000000  00000000  00003992  2**0
+  6 .debug_abbrev 000035ae  00000000  00000000  000046ad  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   0000042b  00000000  00000000  00006cb8  2**0
+  7 .debug_line   000007bc  00000000  00000000  00007c5b  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  00000048  00000000  00000000  000070e4  2**2
+  8 .debug_frame  000000b8  00000000  00000000  00008418  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    000024fa  00000000  00000000  0000712c  2**0
+  9 .debug_str    00002a7f  00000000  00000000  000084d0  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_ranges 00000020  00000000  00000000  00009626  2**0
+ 10 .debug_loc    000000f9  00000000  00000000  0000af4f  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_ranges 00000050  00000000  00000000  0000b048  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -168,33 +170,197 @@ Disassembly of section .text:
  206:	19 be       	out	0x39, r1	; 57
  208:	1a be       	out	0x3a, r1	; 58
  20a:	1b be       	out	0x3b, r1	; 59
- 20c:	0e 94 0d 01 	call	0x21a	; 0x21a <main>
- 210:	0c 94 10 01 	jmp	0x220	; 0x220 <_exit>
+ 20c:	0e 94 1e 01 	call	0x23c	; 0x23c <main>
+ 210:	0c 94 78 01 	jmp	0x2f0	; 0x2f0 <_exit>
 
 00000214 <__bad_interrupt>:
  214:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
 
 00000218 <c1201_init>:
-#include <avr/io.h>
-#include "c1201.h"
-#include "hc595.h"
-#include "board.h"
+//#include "hc595.h"
+//#include "board.h"
+#include "spi.h"
 
 void c1201_init() {
- 218:	08 95       	ret
+	spi_init();
+ 218:	0e 94 5a 01 	call	0x2b4	; 0x2b4 <spi_init>
+ 21c:	08 95       	ret
 
-0000021a <main>:
+0000021e <c1201_transmit>:
+}
+
+void c1201_transmit(uint8_t dis1, uint8_t dis2) {
+ 21e:	cf 93       	push	r28
+ 220:	df 93       	push	r29
+ 222:	d8 2f       	mov	r29, r24
+ 224:	c6 2f       	mov	r28, r22
+	spi_select_slave();
+ 226:	0e 94 69 01 	call	0x2d2	; 0x2d2 <spi_select_slave>
+	spi_transfer(dis1);
+ 22a:	8d 2f       	mov	r24, r29
+ 22c:	0e 94 6f 01 	call	0x2de	; 0x2de <spi_transfer>
+	spi_transfer(dis2);
+ 230:	8c 2f       	mov	r24, r28
+ 232:	0e 94 6f 01 	call	0x2de	; 0x2de <spi_transfer>
+}
+ 236:	df 91       	pop	r29
+ 238:	cf 91       	pop	r28
+ 23a:	08 95       	ret
+
+0000023c <main>:
 #include "spi.h"
 
 
 int main(void)
 {
+	BUTTON_LOW_PORT.PIN0CTRL = PORT_OPC_PULLUP_gc;
+ 23c:	e0 e6       	ldi	r30, 0x60	; 96
+ 23e:	f6 e0       	ldi	r31, 0x06	; 6
+ 240:	88 e1       	ldi	r24, 0x18	; 24
+ 242:	80 8b       	std	Z+16, r24	; 0x10
+	BUTTON_LOW_PORT.PIN1CTRL = PORT_OPC_PULLUP_gc;
+ 244:	81 8b       	std	Z+17, r24	; 0x11
+	BUTTON_LOW_PORT.PIN2CTRL = PORT_OPC_PULLUP_gc;
+ 246:	82 8b       	std	Z+18, r24	; 0x12
+	BUTTON_LOW_PORT.PIN3CTRL = PORT_OPC_PULLUP_gc;
+ 248:	83 8b       	std	Z+19, r24	; 0x13
+	
 	c1201_init();
- 21a:	0e 94 0c 01 	call	0x218	; 0x218 <c1201_init>
- 21e:	ff cf       	rjmp	.-2      	; 0x21e <main+0x4>
+ 24a:	0e 94 0c 01 	call	0x218	; 0x218 <c1201_init>
+    while (1)
+    {
+		c1201_transmit(0x03, 0x03);
+		_delay_ms(100);
+		if (!(BUTTON_LOW_PORT.IN & BUTTON0_PIN_bm)) {
+ 24e:	c0 e6       	ldi	r28, 0x60	; 96
+ 250:	d6 e0       	ldi	r29, 0x06	; 6
+			TCE0.CCA = TCE0.PER;     // Duty cycle 100%: LED not dimmed
+ 252:	00 e0       	ldi	r16, 0x00	; 0
+ 254:	1a e0       	ldi	r17, 0x0A	; 10
+	BUTTON_LOW_PORT.PIN3CTRL = PORT_OPC_PULLUP_gc;
+	
+	c1201_init();
+    while (1)
+    {
+		c1201_transmit(0x03, 0x03);
+ 256:	63 e0       	ldi	r22, 0x03	; 3
+ 258:	83 e0       	ldi	r24, 0x03	; 3
+ 25a:	0e 94 0f 01 	call	0x21e	; 0x21e <c1201_transmit>
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
 
-00000220 <_exit>:
- 220:	f8 94       	cli
+	__builtin_avr_delay_cycles(__ticks_dc);
+ 25e:	8f e4       	ldi	r24, 0x4F	; 79
+ 260:	93 ec       	ldi	r25, 0xC3	; 195
+ 262:	01 97       	sbiw	r24, 0x01	; 1
+ 264:	f1 f7       	brne	.-4      	; 0x262 <main+0x26>
+ 266:	00 c0       	rjmp	.+0      	; 0x268 <main+0x2c>
+ 268:	00 00       	nop
+		_delay_ms(100);
+		if (!(BUTTON_LOW_PORT.IN & BUTTON0_PIN_bm)) {
+ 26a:	88 85       	ldd	r24, Y+8	; 0x08
+ 26c:	80 fd       	sbrc	r24, 0
+ 26e:	05 c0       	rjmp	.+10     	; 0x27a <main+0x3e>
+			TCE0.CCA = TCE0.PER;     // Duty cycle 100%: LED not dimmed
+ 270:	f8 01       	movw	r30, r16
+ 272:	86 a1       	ldd	r24, Z+38	; 0x26
+ 274:	97 a1       	ldd	r25, Z+39	; 0x27
+ 276:	80 a7       	std	Z+40, r24	; 0x28
+ 278:	91 a7       	std	Z+41, r25	; 0x29
+		}
+		if (!(BUTTON_LOW_PORT.IN & BUTTON1_PIN_bm)) {
+ 27a:	88 85       	ldd	r24, Y+8	; 0x08
+ 27c:	81 fd       	sbrc	r24, 1
+ 27e:	07 c0       	rjmp	.+14     	; 0x28e <main+0x52>
+			TCE0.CCA = TCE0.PER/2;   // Duty cycle 50%: LED dimmed to 50%
+ 280:	f8 01       	movw	r30, r16
+ 282:	86 a1       	ldd	r24, Z+38	; 0x26
+ 284:	97 a1       	ldd	r25, Z+39	; 0x27
+ 286:	96 95       	lsr	r25
+ 288:	87 95       	ror	r24
+ 28a:	80 a7       	std	Z+40, r24	; 0x28
+ 28c:	91 a7       	std	Z+41, r25	; 0x29
+		}
+		if (!(BUTTON_LOW_PORT.IN & BUTTON2_PIN_bm)) {
+ 28e:	88 85       	ldd	r24, Y+8	; 0x08
+ 290:	82 fd       	sbrc	r24, 2
+ 292:	09 c0       	rjmp	.+18     	; 0x2a6 <main+0x6a>
+			TCE0.CCA = TCE0.PER/4;   // Duty cycle 25%: LED dimmed to 25%
+ 294:	f8 01       	movw	r30, r16
+ 296:	86 a1       	ldd	r24, Z+38	; 0x26
+ 298:	97 a1       	ldd	r25, Z+39	; 0x27
+ 29a:	96 95       	lsr	r25
+ 29c:	87 95       	ror	r24
+ 29e:	96 95       	lsr	r25
+ 2a0:	87 95       	ror	r24
+ 2a2:	80 a7       	std	Z+40, r24	; 0x28
+ 2a4:	91 a7       	std	Z+41, r25	; 0x29
+		}
+		if (!(BUTTON_LOW_PORT.IN & BUTTON3_PIN_bm)) {
+ 2a6:	88 85       	ldd	r24, Y+8	; 0x08
+ 2a8:	83 fd       	sbrc	r24, 3
+ 2aa:	d5 cf       	rjmp	.-86     	; 0x256 <main+0x1a>
+			TCE0.CCA = 0x0000;       // Duty cycle 0%: LED switched off
+ 2ac:	f8 01       	movw	r30, r16
+ 2ae:	10 a6       	std	Z+40, r1	; 0x28
+ 2b0:	11 a6       	std	Z+41, r1	; 0x29
+ 2b2:	d1 cf       	rjmp	.-94     	; 0x256 <main+0x1a>
 
-00000222 <__stop_program>:
- 222:	ff cf       	rjmp	.-2      	; 0x222 <__stop_program>
+000002b4 <spi_init>:
+void spi_select_slave(void) {
+	SPI_PORT.OUT &= ~SPI_SS_bm;
+}
+
+void spi_deselect_slave(void) {
+	SPI_PORT.OUT |= SPI_SS_bm;
+ 2b4:	e0 e4       	ldi	r30, 0x40	; 64
+ 2b6:	f6 e0       	ldi	r31, 0x06	; 6
+ 2b8:	84 81       	ldd	r24, Z+4	; 0x04
+ 2ba:	80 61       	ori	r24, 0x10	; 16
+ 2bc:	84 83       	std	Z+4, r24	; 0x04
+ 2be:	80 81       	ld	r24, Z
+ 2c0:	8f 7b       	andi	r24, 0xBF	; 191
+ 2c2:	80 83       	st	Z, r24
+ 2c4:	80 81       	ld	r24, Z
+ 2c6:	80 6b       	ori	r24, 0xB0	; 176
+ 2c8:	80 83       	st	Z, r24
+ 2ca:	82 e5       	ldi	r24, 0x52	; 82
+ 2cc:	80 93 c0 08 	sts	0x08C0, r24	; 0x8008c0 <__TEXT_REGION_LENGTH__+0x7008c0>
+ 2d0:	08 95       	ret
+
+000002d2 <spi_select_slave>:
+ 2d2:	e0 e4       	ldi	r30, 0x40	; 64
+ 2d4:	f6 e0       	ldi	r31, 0x06	; 6
+ 2d6:	84 81       	ldd	r24, Z+4	; 0x04
+ 2d8:	8f 7e       	andi	r24, 0xEF	; 239
+ 2da:	84 83       	std	Z+4, r24	; 0x04
+ 2dc:	08 95       	ret
+
+000002de <spi_transfer>:
+}
+
+uint8_t spi_transfer(uint8_t sendbyte) {
+ 2de:	98 2f       	mov	r25, r24
+	// Receive the data.
+	uint8_t receivebyte = SPI_MODULE.DATA;
+ 2e0:	e0 ec       	ldi	r30, 0xC0	; 192
+ 2e2:	f8 e0       	ldi	r31, 0x08	; 8
+ 2e4:	83 81       	ldd	r24, Z+3	; 0x03
+	// Send the data.
+	SPI_MODULE.DATA = sendbyte;
+ 2e6:	93 83       	std	Z+3, r25	; 0x03
+	// While transmission has not yet finished do nothing.
+	while (!(SPI_MODULE.STATUS & SPI_IF_bm));
+ 2e8:	92 81       	ldd	r25, Z+2	; 0x02
+ 2ea:	99 23       	and	r25, r25
+ 2ec:	ec f7       	brge	.-6      	; 0x2e8 <spi_transfer+0xa>
+	return receivebyte;
+ 2ee:	08 95       	ret
+
+000002f0 <_exit>:
+ 2f0:	f8 94       	cli
+
+000002f2 <__stop_program>:
+ 2f2:	ff cf       	rjmp	.-2      	; 0x2f2 <__stop_program>

@@ -1,5 +1,7 @@
 /*
  * \brief This module implements a PWM driver.
+ 
+	RXD
  */
 
 #ifndef PWM_H_

@@ -1,8 +1,4 @@
 /*
- * \brief PWM: dim an LED.
- *
- * This example program dims LED 0 with the aid of pulse-width modulation.
- *
  * The relevant registers are:
  * - CTRLA: Control Register A
  *   - CLKSEL: Clock Select (0 -> off)
@@ -34,43 +30,23 @@ void pwm_init(void)
     //LED_PORT.DIR |= LED0_PIN_bm;
 	//LED_PORT.PIN0CTRL = PORT_INVEN_bm;
 
-	// Initialize the push-buttons.
-	BUTTON_LOW_PORT.PIN0CTRL = PORT_OPC_PULLUP_gc;
-	BUTTON_LOW_PORT.PIN1CTRL = PORT_OPC_PULLUP_gc;
-	BUTTON_LOW_PORT.PIN2CTRL = PORT_OPC_PULLUP_gc;
-	BUTTON_LOW_PORT.PIN3CTRL = PORT_OPC_PULLUP_gc;
-
 	// Enable compare register A and select single slope PWM mode.
     TCE0.CTRLB = TC0_CCAEN_bm | TC_WGMODE_SS_gc;
 	// Set clock period. We use 10000 for simplicity.
 	TCE0.PER = 10000;
 	// Initial duty cycle: 100%.
 	TCE0.CCA = TCE0.PER;            
-	
-
-		if (!(BUTTON_LOW_PORT.IN & BUTTON0_PIN_bm)) {
-			TCE0.CCA = TCE0.PER;     // Duty cycle 100%: LED not dimmed
-		}
-		if (!(BUTTON_LOW_PORT.IN & BUTTON1_PIN_bm)) {
-			TCE0.CCA = TCE0.PER/2;   // Duty cycle 50%: LED dimmed to 50%
-		}
-		if (!(BUTTON_LOW_PORT.IN & BUTTON2_PIN_bm)) {
-			TCE0.CCA = TCE0.PER/4;   // Duty cycle 25%: LED dimmed to 25%
-		}
-		if (!(BUTTON_LOW_PORT.IN & BUTTON3_PIN_bm)) {
-			TCE0.CCA = 0x0000;       // Duty cycle 0%: LED switched off
-		}
 }
 
 void pwm_start(void) {
-	// Turn on the clock.
 	TCE0.CTRLA = TC_CLKSEL_DIV1_gc;
 }
 
 void pwm_stop(void) {
-	
+	TCE0.CTRLA = TC_CLKSEL_OFF_gc;
 }
 
 void pwm_duty(uint8_t duty) {
-	TCE0.CCA = TCE0.PER/duty;
+	TCE0.PER = duty;
+	TCE0.CCA = TCE0.PER;
 }

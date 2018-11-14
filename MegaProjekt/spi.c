@@ -54,10 +54,12 @@ void spi_deselect_slave(void) {
 	SPI_PORT.OUT |= SPI_SS_bm;
 }
 
-uint8_t spi_transfer(uint8_t byte) {
+uint8_t spi_transfer(uint8_t sendbyte) {
+	// Receive the data.
+	uint8_t receivebyte = SPI_MODULE.DATA;
 	// Send the data.
-	SPI_MODULE.DATA = byte;
+	SPI_MODULE.DATA = sendbyte;
 	// While transmission has not yet finished do nothing.
 	while (!(SPI_MODULE.STATUS & SPI_IF_bm));
-	return byte;
+	return receivebyte;
 }
