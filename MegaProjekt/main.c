@@ -10,6 +10,7 @@
 #include "pwm.h"
 #include "board.h"
 #include "spi.h"
+#include "util/delay.h"
 
 
 int main(void)
@@ -17,6 +18,8 @@ int main(void)
 	c1201_init();
     while (1)
     {
+		c1201_transmit(0x01, 0x02);
+		_delay_ms(500);
     }
 }
 
