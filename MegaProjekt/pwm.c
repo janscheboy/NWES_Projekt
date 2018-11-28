@@ -26,27 +26,24 @@
 // - We can invert the pin: the active low LED becomes active high.
 void pwm_init(void)
 {
-	// Initialize the LED and invert the pin.
-    //LED_PORT.DIR |= LED0_PIN_bm;
-	//LED_PORT.PIN0CTRL = PORT_INVEN_bm;
-
 	// Enable compare register A and select single slope PWM mode.
-    TCE0.CTRLB = TC0_CCAEN_bm | TC_WGMODE_SS_gc;
+    TCF0.CTRLB = TC0_CCCEN_bm | TC_WGMODE_SS_gc;
 	// Set clock period. We use 10000 for simplicity.
-	TCE0.PER = 10000;
+	TCF0.PER = 10000;
 	// Initial duty cycle: 100%.
-	TCE0.CCA = TCE0.PER;            
+	TCF0.CCC = TCF0.PER;            
 }
 
 void pwm_start(void) {
-	TCE0.CTRLA = TC_CLKSEL_DIV1_gc;
+	TCF0.CTRLA = TC_CLKSEL_DIV1_gc;
 }
 
 void pwm_stop(void) {
-	TCE0.CTRLA = TC_CLKSEL_OFF_gc;
+	TCF0.CTRLA = TC_CLKSEL_OFF_gc;
 }
 
-void pwm_duty(uint8_t duty) {
-	TCE0.PER = duty;
-	TCE0.CCA = TCE0.PER;
+void pwm_duty(uint8_t duty) { //z.B. 25 oder 100
+	uint8_t actualduty = 100 / duty;
+	TCF0.PER = TCF0.PER / actualduty;
+	TCF0.CCC = TCF0.PER / actualduty; // z.B. 4 oder 1
 }

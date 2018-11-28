@@ -3,29 +3,29 @@ MegaProjekt.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         000002f4  00000000  00000000  00000054  2**1
+  0 .text         0000032e  00000000  00000000  00000054  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .data         00000000  00802000  00802000  00000348  2**0
+  1 .data         00000000  00802000  00802000  00000382  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  2 .comment      00000030  00000000  00000000  00000348  2**0
+  2 .comment      00000030  00000000  00000000  00000382  2**0
                   CONTENTS, READONLY
-  3 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  00000378  2**2
+  3 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  000003b4  2**2
                   CONTENTS, READONLY
-  4 .debug_aranges 00000080  00000000  00000000  000003b8  2**0
+  4 .debug_aranges 000000b8  00000000  00000000  000003f4  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   00004275  00000000  00000000  00000438  2**0
+  5 .debug_info   00004580  00000000  00000000  000004ac  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 000035ae  00000000  00000000  000046ad  2**0
+  6 .debug_abbrev 0000365c  00000000  00000000  00004a2c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   000007bc  00000000  00000000  00007c5b  2**0
+  7 .debug_line   00000913  00000000  00000000  00008088  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  000000b8  00000000  00000000  00008418  2**2
+  8 .debug_frame  00000114  00000000  00000000  0000899c  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    00002a7f  00000000  00000000  000084d0  2**0
+  9 .debug_str    00002c26  00000000  00000000  00008ab0  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    000000f9  00000000  00000000  0000af4f  2**0
+ 10 .debug_loc    00000136  00000000  00000000  0000b6d6  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000050  00000000  00000000  0000b048  2**0
+ 11 .debug_ranges 00000078  00000000  00000000  0000b80c  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -170,197 +170,222 @@ Disassembly of section .text:
  206:	19 be       	out	0x39, r1	; 57
  208:	1a be       	out	0x3a, r1	; 58
  20a:	1b be       	out	0x3b, r1	; 59
- 20c:	0e 94 1e 01 	call	0x23c	; 0x23c <main>
- 210:	0c 94 78 01 	jmp	0x2f0	; 0x2f0 <_exit>
+ 20c:	0e 94 16 01 	call	0x22c	; 0x22c <main>
+ 210:	0c 94 95 01 	jmp	0x32a	; 0x32a <_exit>
 
 00000214 <__bad_interrupt>:
  214:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
 
 00000218 <c1201_init>:
-//#include "hc595.h"
-//#include "board.h"
+#include "hc595.h"
+#include "board.h"
 #include "spi.h"
 
 void c1201_init() {
 	spi_init();
- 218:	0e 94 5a 01 	call	0x2b4	; 0x2b4 <spi_init>
- 21c:	08 95       	ret
-
-0000021e <c1201_transmit>:
-}
-
-void c1201_transmit(uint8_t dis1, uint8_t dis2) {
- 21e:	cf 93       	push	r28
- 220:	df 93       	push	r29
- 222:	d8 2f       	mov	r29, r24
- 224:	c6 2f       	mov	r28, r22
+ 218:	0e 94 58 01 	call	0x2b0	; 0x2b0 <spi_init>
 	spi_select_slave();
- 226:	0e 94 69 01 	call	0x2d2	; 0x2d2 <spi_select_slave>
-	spi_transfer(dis1);
- 22a:	8d 2f       	mov	r24, r29
- 22c:	0e 94 6f 01 	call	0x2de	; 0x2de <spi_transfer>
-	spi_transfer(dis2);
- 230:	8c 2f       	mov	r24, r28
- 232:	0e 94 6f 01 	call	0x2de	; 0x2de <spi_transfer>
-}
- 236:	df 91       	pop	r29
- 238:	cf 91       	pop	r28
- 23a:	08 95       	ret
+ 21c:	0e 94 67 01 	call	0x2ce	; 0x2ce <spi_select_slave>
+	HC595_PORT.IN = (HC595_MR_bm);
+ 220:	e0 ea       	ldi	r30, 0xA0	; 160
+ 222:	f6 e0       	ldi	r31, 0x06	; 6
+ 224:	88 e0       	ldi	r24, 0x08	; 8
+ 226:	80 87       	std	Z+8, r24	; 0x08
+	HC595_PORT.DIR = (HC595_MR_bm);
+ 228:	80 83       	st	Z, r24
+ 22a:	08 95       	ret
 
-0000023c <main>:
+0000022c <main>:
 #include "spi.h"
 
 
 int main(void)
 {
 	BUTTON_LOW_PORT.PIN0CTRL = PORT_OPC_PULLUP_gc;
- 23c:	e0 e6       	ldi	r30, 0x60	; 96
- 23e:	f6 e0       	ldi	r31, 0x06	; 6
- 240:	88 e1       	ldi	r24, 0x18	; 24
- 242:	80 8b       	std	Z+16, r24	; 0x10
+ 22c:	e0 e6       	ldi	r30, 0x60	; 96
+ 22e:	f6 e0       	ldi	r31, 0x06	; 6
+ 230:	88 e1       	ldi	r24, 0x18	; 24
+ 232:	80 8b       	std	Z+16, r24	; 0x10
 	BUTTON_LOW_PORT.PIN1CTRL = PORT_OPC_PULLUP_gc;
- 244:	81 8b       	std	Z+17, r24	; 0x11
+ 234:	81 8b       	std	Z+17, r24	; 0x11
 	BUTTON_LOW_PORT.PIN2CTRL = PORT_OPC_PULLUP_gc;
- 246:	82 8b       	std	Z+18, r24	; 0x12
+ 236:	82 8b       	std	Z+18, r24	; 0x12
 	BUTTON_LOW_PORT.PIN3CTRL = PORT_OPC_PULLUP_gc;
- 248:	83 8b       	std	Z+19, r24	; 0x13
+ 238:	83 8b       	std	Z+19, r24	; 0x13
 	
 	c1201_init();
- 24a:	0e 94 0c 01 	call	0x218	; 0x218 <c1201_init>
+ 23a:	0e 94 0c 01 	call	0x218	; 0x218 <c1201_init>
     while (1)
     {
-		c1201_transmit(0x03, 0x03);
-		_delay_ms(100);
 		if (!(BUTTON_LOW_PORT.IN & BUTTON0_PIN_bm)) {
- 24e:	c0 e6       	ldi	r28, 0x60	; 96
- 250:	d6 e0       	ldi	r29, 0x06	; 6
-			TCE0.CCA = TCE0.PER;     // Duty cycle 100%: LED not dimmed
- 252:	00 e0       	ldi	r16, 0x00	; 0
- 254:	1a e0       	ldi	r17, 0x0A	; 10
-	BUTTON_LOW_PORT.PIN3CTRL = PORT_OPC_PULLUP_gc;
-	
-	c1201_init();
-    while (1)
-    {
-		c1201_transmit(0x03, 0x03);
- 256:	63 e0       	ldi	r22, 0x03	; 3
- 258:	83 e0       	ldi	r24, 0x03	; 3
- 25a:	0e 94 0f 01 	call	0x21e	; 0x21e <c1201_transmit>
-	#else
-		//round up by default
-		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
-	#endif
-
-	__builtin_avr_delay_cycles(__ticks_dc);
- 25e:	8f e4       	ldi	r24, 0x4F	; 79
- 260:	93 ec       	ldi	r25, 0xC3	; 195
- 262:	01 97       	sbiw	r24, 0x01	; 1
- 264:	f1 f7       	brne	.-4      	; 0x262 <main+0x26>
- 266:	00 c0       	rjmp	.+0      	; 0x268 <main+0x2c>
- 268:	00 00       	nop
-		_delay_ms(100);
-		if (!(BUTTON_LOW_PORT.IN & BUTTON0_PIN_bm)) {
- 26a:	88 85       	ldd	r24, Y+8	; 0x08
- 26c:	80 fd       	sbrc	r24, 0
- 26e:	05 c0       	rjmp	.+10     	; 0x27a <main+0x3e>
-			TCE0.CCA = TCE0.PER;     // Duty cycle 100%: LED not dimmed
- 270:	f8 01       	movw	r30, r16
- 272:	86 a1       	ldd	r24, Z+38	; 0x26
- 274:	97 a1       	ldd	r25, Z+39	; 0x27
- 276:	80 a7       	std	Z+40, r24	; 0x28
- 278:	91 a7       	std	Z+41, r25	; 0x29
+ 23e:	c0 e6       	ldi	r28, 0x60	; 96
+ 240:	d6 e0       	ldi	r29, 0x06	; 6
+ 242:	88 85       	ldd	r24, Y+8	; 0x08
+ 244:	80 fd       	sbrc	r24, 0
+ 246:	03 c0       	rjmp	.+6      	; 0x24e <main+0x22>
+			pwm_duty(100);
+ 248:	84 e6       	ldi	r24, 0x64	; 100
+ 24a:	0e 94 3a 01 	call	0x274	; 0x274 <pwm_duty>
 		}
 		if (!(BUTTON_LOW_PORT.IN & BUTTON1_PIN_bm)) {
- 27a:	88 85       	ldd	r24, Y+8	; 0x08
- 27c:	81 fd       	sbrc	r24, 1
- 27e:	07 c0       	rjmp	.+14     	; 0x28e <main+0x52>
-			TCE0.CCA = TCE0.PER/2;   // Duty cycle 50%: LED dimmed to 50%
- 280:	f8 01       	movw	r30, r16
- 282:	86 a1       	ldd	r24, Z+38	; 0x26
- 284:	97 a1       	ldd	r25, Z+39	; 0x27
- 286:	96 95       	lsr	r25
- 288:	87 95       	ror	r24
- 28a:	80 a7       	std	Z+40, r24	; 0x28
- 28c:	91 a7       	std	Z+41, r25	; 0x29
+ 24e:	88 85       	ldd	r24, Y+8	; 0x08
+ 250:	81 fd       	sbrc	r24, 1
+ 252:	03 c0       	rjmp	.+6      	; 0x25a <main+0x2e>
+			pwm_duty(75);
+ 254:	8b e4       	ldi	r24, 0x4B	; 75
+ 256:	0e 94 3a 01 	call	0x274	; 0x274 <pwm_duty>
 		}
 		if (!(BUTTON_LOW_PORT.IN & BUTTON2_PIN_bm)) {
- 28e:	88 85       	ldd	r24, Y+8	; 0x08
- 290:	82 fd       	sbrc	r24, 2
- 292:	09 c0       	rjmp	.+18     	; 0x2a6 <main+0x6a>
-			TCE0.CCA = TCE0.PER/4;   // Duty cycle 25%: LED dimmed to 25%
- 294:	f8 01       	movw	r30, r16
- 296:	86 a1       	ldd	r24, Z+38	; 0x26
- 298:	97 a1       	ldd	r25, Z+39	; 0x27
- 29a:	96 95       	lsr	r25
- 29c:	87 95       	ror	r24
- 29e:	96 95       	lsr	r25
- 2a0:	87 95       	ror	r24
- 2a2:	80 a7       	std	Z+40, r24	; 0x28
- 2a4:	91 a7       	std	Z+41, r25	; 0x29
+ 25a:	88 85       	ldd	r24, Y+8	; 0x08
+ 25c:	82 fd       	sbrc	r24, 2
+ 25e:	03 c0       	rjmp	.+6      	; 0x266 <main+0x3a>
+			pwm_duty(50);
+ 260:	82 e3       	ldi	r24, 0x32	; 50
+ 262:	0e 94 3a 01 	call	0x274	; 0x274 <pwm_duty>
 		}
 		if (!(BUTTON_LOW_PORT.IN & BUTTON3_PIN_bm)) {
- 2a6:	88 85       	ldd	r24, Y+8	; 0x08
- 2a8:	83 fd       	sbrc	r24, 3
- 2aa:	d5 cf       	rjmp	.-86     	; 0x256 <main+0x1a>
-			TCE0.CCA = 0x0000;       // Duty cycle 0%: LED switched off
- 2ac:	f8 01       	movw	r30, r16
- 2ae:	10 a6       	std	Z+40, r1	; 0x28
- 2b0:	11 a6       	std	Z+41, r1	; 0x29
- 2b2:	d1 cf       	rjmp	.-94     	; 0x256 <main+0x1a>
+ 266:	88 85       	ldd	r24, Y+8	; 0x08
+ 268:	83 fd       	sbrc	r24, 3
+ 26a:	eb cf       	rjmp	.-42     	; 0x242 <main+0x16>
+			pwm_duty(25);
+ 26c:	89 e1       	ldi	r24, 0x19	; 25
+ 26e:	0e 94 3a 01 	call	0x274	; 0x274 <pwm_duty>
+ 272:	e7 cf       	rjmp	.-50     	; 0x242 <main+0x16>
 
-000002b4 <spi_init>:
+00000274 <pwm_duty>:
+
+void pwm_stop(void) {
+	TCF0.CTRLA = TC_CLKSEL_OFF_gc;
+}
+
+void pwm_duty(uint8_t duty) { //z.B. 25 oder 100
+ 274:	cf 93       	push	r28
+ 276:	df 93       	push	r29
+	uint8_t actualduty = 100 / duty;
+	TCF0.PER = TCF0.PER / actualduty;
+ 278:	e0 e0       	ldi	r30, 0x00	; 0
+ 27a:	fb e0       	ldi	r31, 0x0B	; 11
+ 27c:	c6 a1       	ldd	r28, Z+38	; 0x26
+ 27e:	d7 a1       	ldd	r29, Z+39	; 0x27
+ 280:	68 2f       	mov	r22, r24
+ 282:	70 e0       	ldi	r23, 0x00	; 0
+ 284:	84 e6       	ldi	r24, 0x64	; 100
+ 286:	90 e0       	ldi	r25, 0x00	; 0
+ 288:	0e 94 81 01 	call	0x302	; 0x302 <__divmodhi4>
+ 28c:	9b 01       	movw	r18, r22
+ 28e:	33 27       	eor	r19, r19
+ 290:	ce 01       	movw	r24, r28
+ 292:	b9 01       	movw	r22, r18
+ 294:	0e 94 6d 01 	call	0x2da	; 0x2da <__udivmodhi4>
+ 298:	66 a3       	std	Z+38, r22	; 0x26
+ 29a:	77 a3       	std	Z+39, r23	; 0x27
+	TCF0.CCC = TCF0.PER / actualduty; // z.B. 4 oder 1
+ 29c:	86 a1       	ldd	r24, Z+38	; 0x26
+ 29e:	97 a1       	ldd	r25, Z+39	; 0x27
+ 2a0:	b9 01       	movw	r22, r18
+ 2a2:	0e 94 6d 01 	call	0x2da	; 0x2da <__udivmodhi4>
+ 2a6:	64 a7       	std	Z+44, r22	; 0x2c
+ 2a8:	75 a7       	std	Z+45, r23	; 0x2d
+}
+ 2aa:	df 91       	pop	r29
+ 2ac:	cf 91       	pop	r28
+ 2ae:	08 95       	ret
+
+000002b0 <spi_init>:
+// We use a prescaler of 64. Therefore the transmission speed is 31.25 kbps. The
+// slave select line is active low. At the beginning the slave is deselected.
+void spi_init(void)
+{
+	// Deactivate the slave.
+	SPI_PORT.OUT |= SPI_SS_bm;
+ 2b0:	e0 e4       	ldi	r30, 0x40	; 64
+ 2b2:	f6 e0       	ldi	r31, 0x06	; 6
+ 2b4:	84 81       	ldd	r24, Z+4	; 0x04
+ 2b6:	80 61       	ori	r24, 0x10	; 16
+ 2b8:	84 83       	std	Z+4, r24	; 0x04
+	// Make MISO an input line.
+	SPI_PORT.DIR &= ~SPI_MISO_bm;
+ 2ba:	80 81       	ld	r24, Z
+ 2bc:	8f 7b       	andi	r24, 0xBF	; 191
+ 2be:	80 83       	st	Z, r24
+	// Make SS, MOSI and SCK output lines.
+	SPI_PORT.DIR |= SPI_SS_bm | SPI_MOSI_bm | SPI_SCK_bm;
+ 2c0:	80 81       	ld	r24, Z
+ 2c2:	80 6b       	ori	r24, 0xB0	; 176
+ 2c4:	80 83       	st	Z, r24
+	// Enable SPI, select master mode and set the prescaler factor to 64.
+	SPI_MODULE.CTRL = SPI_ENABLE_bm | SPI_MASTER_bm | SPI_PRESCALER_DIV64_gc;
+ 2c6:	82 e5       	ldi	r24, 0x52	; 82
+ 2c8:	80 93 c0 08 	sts	0x08C0, r24	; 0x8008c0 <__TEXT_REGION_LENGTH__+0x7008c0>
+ 2cc:	08 95       	ret
+
+000002ce <spi_select_slave>:
+}
+
 void spi_select_slave(void) {
 	SPI_PORT.OUT &= ~SPI_SS_bm;
-}
+ 2ce:	e0 e4       	ldi	r30, 0x40	; 64
+ 2d0:	f6 e0       	ldi	r31, 0x06	; 6
+ 2d2:	84 81       	ldd	r24, Z+4	; 0x04
+ 2d4:	8f 7e       	andi	r24, 0xEF	; 239
+ 2d6:	84 83       	std	Z+4, r24	; 0x04
+ 2d8:	08 95       	ret
 
-void spi_deselect_slave(void) {
-	SPI_PORT.OUT |= SPI_SS_bm;
- 2b4:	e0 e4       	ldi	r30, 0x40	; 64
- 2b6:	f6 e0       	ldi	r31, 0x06	; 6
- 2b8:	84 81       	ldd	r24, Z+4	; 0x04
- 2ba:	80 61       	ori	r24, 0x10	; 16
- 2bc:	84 83       	std	Z+4, r24	; 0x04
- 2be:	80 81       	ld	r24, Z
- 2c0:	8f 7b       	andi	r24, 0xBF	; 191
- 2c2:	80 83       	st	Z, r24
- 2c4:	80 81       	ld	r24, Z
- 2c6:	80 6b       	ori	r24, 0xB0	; 176
- 2c8:	80 83       	st	Z, r24
- 2ca:	82 e5       	ldi	r24, 0x52	; 82
- 2cc:	80 93 c0 08 	sts	0x08C0, r24	; 0x8008c0 <__TEXT_REGION_LENGTH__+0x7008c0>
- 2d0:	08 95       	ret
+000002da <__udivmodhi4>:
+ 2da:	aa 1b       	sub	r26, r26
+ 2dc:	bb 1b       	sub	r27, r27
+ 2de:	51 e1       	ldi	r21, 0x11	; 17
+ 2e0:	07 c0       	rjmp	.+14     	; 0x2f0 <__udivmodhi4_ep>
 
-000002d2 <spi_select_slave>:
- 2d2:	e0 e4       	ldi	r30, 0x40	; 64
- 2d4:	f6 e0       	ldi	r31, 0x06	; 6
- 2d6:	84 81       	ldd	r24, Z+4	; 0x04
- 2d8:	8f 7e       	andi	r24, 0xEF	; 239
- 2da:	84 83       	std	Z+4, r24	; 0x04
- 2dc:	08 95       	ret
+000002e2 <__udivmodhi4_loop>:
+ 2e2:	aa 1f       	adc	r26, r26
+ 2e4:	bb 1f       	adc	r27, r27
+ 2e6:	a6 17       	cp	r26, r22
+ 2e8:	b7 07       	cpc	r27, r23
+ 2ea:	10 f0       	brcs	.+4      	; 0x2f0 <__udivmodhi4_ep>
+ 2ec:	a6 1b       	sub	r26, r22
+ 2ee:	b7 0b       	sbc	r27, r23
 
-000002de <spi_transfer>:
-}
+000002f0 <__udivmodhi4_ep>:
+ 2f0:	88 1f       	adc	r24, r24
+ 2f2:	99 1f       	adc	r25, r25
+ 2f4:	5a 95       	dec	r21
+ 2f6:	a9 f7       	brne	.-22     	; 0x2e2 <__udivmodhi4_loop>
+ 2f8:	80 95       	com	r24
+ 2fa:	90 95       	com	r25
+ 2fc:	bc 01       	movw	r22, r24
+ 2fe:	cd 01       	movw	r24, r26
+ 300:	08 95       	ret
 
-uint8_t spi_transfer(uint8_t sendbyte) {
- 2de:	98 2f       	mov	r25, r24
-	// Receive the data.
-	uint8_t receivebyte = SPI_MODULE.DATA;
- 2e0:	e0 ec       	ldi	r30, 0xC0	; 192
- 2e2:	f8 e0       	ldi	r31, 0x08	; 8
- 2e4:	83 81       	ldd	r24, Z+3	; 0x03
-	// Send the data.
-	SPI_MODULE.DATA = sendbyte;
- 2e6:	93 83       	std	Z+3, r25	; 0x03
-	// While transmission has not yet finished do nothing.
-	while (!(SPI_MODULE.STATUS & SPI_IF_bm));
- 2e8:	92 81       	ldd	r25, Z+2	; 0x02
- 2ea:	99 23       	and	r25, r25
- 2ec:	ec f7       	brge	.-6      	; 0x2e8 <spi_transfer+0xa>
-	return receivebyte;
- 2ee:	08 95       	ret
+00000302 <__divmodhi4>:
+ 302:	97 fb       	bst	r25, 7
+ 304:	07 2e       	mov	r0, r23
+ 306:	16 f4       	brtc	.+4      	; 0x30c <__divmodhi4+0xa>
+ 308:	00 94       	com	r0
+ 30a:	07 d0       	rcall	.+14     	; 0x31a <__divmodhi4_neg1>
+ 30c:	77 fd       	sbrc	r23, 7
+ 30e:	09 d0       	rcall	.+18     	; 0x322 <__divmodhi4_neg2>
+ 310:	0e 94 6d 01 	call	0x2da	; 0x2da <__udivmodhi4>
+ 314:	07 fc       	sbrc	r0, 7
+ 316:	05 d0       	rcall	.+10     	; 0x322 <__divmodhi4_neg2>
+ 318:	3e f4       	brtc	.+14     	; 0x328 <__divmodhi4_exit>
 
-000002f0 <_exit>:
- 2f0:	f8 94       	cli
+0000031a <__divmodhi4_neg1>:
+ 31a:	90 95       	com	r25
+ 31c:	81 95       	neg	r24
+ 31e:	9f 4f       	sbci	r25, 0xFF	; 255
+ 320:	08 95       	ret
 
-000002f2 <__stop_program>:
- 2f2:	ff cf       	rjmp	.-2      	; 0x2f2 <__stop_program>
+00000322 <__divmodhi4_neg2>:
+ 322:	70 95       	com	r23
+ 324:	61 95       	neg	r22
+ 326:	7f 4f       	sbci	r23, 0xFF	; 255
+
+00000328 <__divmodhi4_exit>:
+ 328:	08 95       	ret
+
+0000032a <_exit>:
+ 32a:	f8 94       	cli
+
+0000032c <__stop_program>:
+ 32c:	ff cf       	rjmp	.-2      	; 0x32c <__stop_program>
